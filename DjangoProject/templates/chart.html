@@ -1,0 +1,156 @@
+<html>
+	<head>	
+	<canvas id="myChart"></canvas>
+	</head>
+	<input type="text" id="ticker">
+	<button onclick="poll()">Track this Ticker</button>
+        <br>
+	<button onclick="news()">Get News</button>
+	<button onclick="stats()">Get Stats</button>
+	<br>
+	<table id="myTable">
+		<tr>
+			<th>Headline</th>
+			<th>Summary</th>
+		</tr>
+	</table>
+	<table id="statsTable">
+		<tr id="mcRow">
+			<th>Market Cap</th>
+		</tr>
+		<tr id="empRow">
+			<th>Employees</th>
+		</tr>
+		<tr id="exDivRow">
+			<th>Ex-Dividend Date</th>
+		</tr>
+		<tr id="yrRow">
+			<th>Change in 1 Year</th>
+		</tr>
+		<tr id="divYRow">
+			<th>Dividend Yield</th>
+		</tr>
+	</table>
+	<body>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script>
+
+const labels = [
+];
+
+const data = {
+  labels: labels,
+  datasets: [{
+    label: 'Stock Chart powered by IEX Cloud',
+    backgroundColor: 'rgb(255, 99, 132)',
+    borderColor: 'rgb(255, 99, 132)',
+    data: [],
+  }]
+};
+
+const config = {
+  type: 'line',
+  data: data,
+  options: {
+	  responsive: true
+  },
+};
+
+
+// === include 'setup' then 'config' above ===
+
+  var myChart = new Chart(
+    document.getElementById('myChart'),
+    config,
+  );
+
+var table = document.getElementById("myTable");
+var row = table.insertRow(1);
+// Insert new cells (<td> elements) at the 1st and 2nd position of the "new" <tr> element:
+var cell1 = row.insertCell(0);
+var cell2 = row.insertCell(1);
+
+var statsTable = document.getElementById("statsTable");
+var statsRow1 = document.getElementById("mcRow");
+var statsCell1 = statsRow1.insertCell(1);
+var statsRow2 = document.getElementById("empRow");
+var statsCell2 = statsRow2.insertCell(1);
+var statsRow3 = document.getElementById("exDivRow");
+var statsCell3 = statsRow3.insertCell(1);
+var statsRow4 = document.getElementById("yrRow");
+var statsCell4 = statsRow4.insertCell(1);
+var statsRow5 = document.getElementById("divYRow");
+var statsCell5 = statsRow5.insertCell(1);
+
+function news(){
+	console.log("news called");
+	console.log(document.getElementById('ticker'));
+	$.ajax({
+        url: "/News",
+        success: function(data) {
+            console.log("News retrieved");
+	    data = data.replaceAll("'", '"');
+	    data = data.replaceAll("False", '"False"');
+    	    data = data.replaceAll("True", '"True"');
+	    parsed = JSON.parse(data);
+	    console.log(parsed);
+	   
+	    // Add some text to the new cells:
+	    cell1.innerHTML = parsed["headline"];
+	    cell2.innerHTML = parsed["summary"]; 
+
+        },
+        data: {ticker: document.getElementById('ticker').value},
+    })
+}
+
+function stats(){
+	console.log("stats called");
+	console.log(document.getElementById('ticker'));
+	$.ajax({
+        url: "/Stats",
+        success: function(data) {
+            console.log("Stats retrieved");
+            console.log(data)  
+	    parsed = JSON.parse(data);
+            console.log(parsed);
+
+            // Add some text to the new cells:
+            statsCell1.innerHTML = parsed["marketCap"];
+            statsCell2.innerHTML = parsed["employees"];
+	    statsCell3.innerHTML = parsed["exDivDate"];
+	    statsCell4.innerHTML = parsed["yrChange"];
+	    statsCell5.innerHTML = parsed["divYield"];
+        },
+        data: {ticker: document.getElementById('ticker').value},
+    })
+}
+
+function poll() {
+	console.log(document.getElementById('ticker'));
+    $.ajax({
+	url: "/ChartData",
+	success: function(data) {
+            console.log("polling");
+	    console.log(data);
+
+	    // get current eastern time	
+	    var today = new Date();
+	    var newLabel = today.toLocaleString('en-US', { timeZone: 'America/New_York' }); 
+	    
+	    // add new label and data to chart and update
+	    myChart.data.labels.push(newLabel);
+            myChart.data.datasets.forEach((dataset) => {
+            	dataset.data.push(data);
+	    });
+	    myChart.update();
+        },
+	data: {ticker: document.getElementById('ticker').value},
+	complete: setTimeout(function() {poll()}, 5000),
+        timeout: 2000
+    })
+};
+</script>
+</body>
+</html>
