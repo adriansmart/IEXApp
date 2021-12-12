@@ -1,12 +1,27 @@
 <html>
 	<head>	
 	<canvas id="myChart"></canvas>
+	<style>
+	table {
+  		width: 100%;
+  		border: 1px solid black;
+		padding: 15px;
+  		text-align: left;
+	}
+	th{
+ 		border-bottom: 1px solid #ddd;
+	}
+	tr:hover {background-color: yellow;}
+	</style>
 	</head>
 	<input type="text" id="ticker">
 	<button onclick="poll()">Track this Ticker</button>
         <br>
 	<button onclick="news()">Get News</button>
 	<button onclick="stats()">Get Stats</button>
+	<br>
+	<input type="text" id="shares">
+	<button onclick="buy()">Buy Shares</button>
 	<br>
 	<table id="myTable">
 		<tr>
@@ -82,6 +97,18 @@ var statsRow4 = document.getElementById("yrRow");
 var statsCell4 = statsRow4.insertCell(1);
 var statsRow5 = document.getElementById("divYRow");
 var statsCell5 = statsRow5.insertCell(1);
+
+function buy(){
+	console.log("buy stock called");
+        console.log(document.getElementById('ticker'));
+        $.ajax({
+        url: "/Buy",
+        success: function(data) {
+            console.log("Buy complete");
+        },
+        data: {ticker: document.getElementById('ticker').value, shares: document.getElementById('shares').value},
+    })
+}
 
 function news(){
 	console.log("news called");
