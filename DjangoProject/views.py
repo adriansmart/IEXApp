@@ -22,12 +22,12 @@ def buy_stock(request):
 
 def get_news(request):
     ticker = request.GET.get('ticker','')
-    url = "https://cloud.iexapis.com/stable/stock/" + ticker + "/news/last/1?token=pk_2a139a4c358f4f5e9e8372622b8bfeeb"
+    url = "https://cloud.iexapis.com/stable/stock/" + ticker + "/news/last/1?token="
     news = req.get(url).json()
     return HttpResponse(news)
 
 def get_price(ticker):
-    url = "https://cloud.iexapis.com/stable/stock/" + ticker + "/price?token=pk_2a139a4c358f4f5e9e8372622b8bfeeb"
+    url = "https://cloud.iexapis.com/stable/stock/" + ticker + "/price?token="
     price = req.get(url)
     return price
 
@@ -36,27 +36,27 @@ def get_company_stats(request):
     ticker = request.GET.get('ticker','')
     outDict = {}  
     # market cap
-    url = "https://cloud.iexapis.com/stable/stock/" + ticker + "/stats/marketcap?token=pk_2a139a4c358f4f5e9e8372622b8bfeeb"
+    url = "https://cloud.iexapis.com/stable/stock/" + ticker + "/stats/marketcap?token="
     outDict['marketCap'] = req.get(url).text
 
     # employees
-    url = "https://cloud.iexapis.com/stable/stock/" + ticker + "/stats/employees?token=pk_2a139a4c358f4f5e9e8372622b8bfeeb"
+    url = "https://cloud.iexapis.com/stable/stock/" + ticker + "/stats/employees?token="
     outDict['employees'] = req.get(url).text
 
     # next dividend date
-    url = "https://cloud.iexapis.com/stable/stock/" + ticker + "/stats/nextDividendDate?token=pk_2a139a4c358f4f5e9e8372622b8bfeeb"
+    url = "https://cloud.iexapis.com/stable/stock/" + ticker + "/stats/nextDividendDate?token="
     outDict['nextDivDate'] = req.get(url).text
 
     # ex-dividend date
-    url = "https://cloud.iexapis.com/stable/stock/" + ticker + "/stats/exDividendDate?token=pk_2a139a4c358f4f5e9e8372622b8bfeeb"
+    url = "https://cloud.iexapis.com/stable/stock/" + ticker + "/stats/exDividendDate?token="
     outDict['exDivDate'] = req.get(url).text
 
     # 1 year change
-    url = "https://cloud.iexapis.com/stable/stock/" + ticker + "/stats/year1ChangePercent?token=pk_2a139a4c358f4f5e9e8372622b8bfeeb"
+    url = "https://cloud.iexapis.com/stable/stock/" + ticker + "/stats/year1ChangePercent?token="
     outDict['yrChange'] = req.get(url).text
 
     # dividend yield
-    url = "https://cloud.iexapis.com/stable/stock/" + ticker + "/stats/dividendYield?token=pk_2a139a4c358f4f5e9e8372622b8bfeeb"
+    url = "https://cloud.iexapis.com/stable/stock/" + ticker + "/stats/dividendYield?token="
     outDict['divYield'] = req.get(url).text
 
     # convert Dictionary to json string
