@@ -3,7 +3,6 @@ from ibapi.order import Order
 from ibapi.wrapper import EWrapper
 from ibapi.client import EClient
 import threading
-from queue import Queue
 
 class TestWrapper(EWrapper):
     def __init__(self):
@@ -39,17 +38,7 @@ class TestApp(TestWrapper, TestClient):
         	# 7497 for TWS
 		self.connect("127.0.0.1", 7497, clientId=0)
  
-#	def __init__(self, ticker):
-#		TestWrapper.__init__(self)
-#		TestClient.__init__(self, wrapper=self)
-        # 4002 for gateway
-        # 7497 for TWS
-#		self.connect("127.0.0.1", 7497, clientId=0)
-#		print("connected?")
-#		self.ticker = ticker
-
 	def nextValidId(self, orderId: int):
-        # super().nextValidId(orderId)
 		print("nextValidId called")
 		self.nextValidOrderId = orderId
 		print("NextValidId:", orderId)
@@ -63,17 +52,9 @@ def exec():
         app.run()
         print("exec")
 
-print("sgfdgd")
-#q = Queue()
 app = TestApp()
 t1 = threading.Thread(target=exec)
 t1.start()
-#app.run()
-
-def exec():
-	print("exec called")
-	app.run()
-	print("exec")
 
 def buy(ticker, numShares):
 	print("buy called")
