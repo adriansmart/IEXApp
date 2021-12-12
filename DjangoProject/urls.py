@@ -23,4 +23,5 @@ urlpatterns = [
    path('ChartData/', views.update_price),
    path('News/',views.get_news),
    path('Stats/',views.get_company_stats),
+   path('Buy/',views.buy_stock)
 ]
